@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Formulaire d'inscription</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <h1>Formulaire d'inscription</h1>
+
+    <form>
+     
+      <fieldset>
+        <legend>Informations personnelles</legend>
+
+        <label for="nom">Nom :</label><br />
+        <input
+          type="text"
+          name="nom"
+          required
+          autocomplete="family-name"
+        /><br />
+
+        <label for="prenom">Prénom :</label><br />
+        <input
+          type="text"
+          name="prenom"
+          required
+          autocomplete="given-name"
+        /><br />
+
+        <label for="email">Email :</label><br />
+        <input type="email" name="email" required autocomplete="email" /><br />
+
+        <label for="telephone">Téléphone :</label><br />
+        <input
+          type="tel"
+          name="telephone"
+          pattern="^(\+33|0)[1-9](\d{2}){4}$"
+          placeholder="0612345678"
+          required
+        /><br />
+
+        <label for="date">Date de naissance :</label><br />
+        <input type="date" name="date" required max="2008-03-11" /><br />
+      </fieldset>
+
+
+      <fieldset>
+        <legend>Sécurité</legend>
+
+        <label for="password">Mot de passe :</label><br />
+        <input
+          type="password"
+          name="password"
+          required
+          pattern="(?=.*[A-Z])(?=.*[0-9]).{8,}"
+          title="Minimum 8 caractères, une majuscule et un chiffre"
+        /><br />
+
+        <label for="confirm">Confirmer le mot de passe :</label><br />
+        <input type="password" name="confirm" required /><br />
+      </fieldset>
+
+      <fieldset>
+        <legend>Localisation</legend>
+
+        <label for="pays">Pays :</label><br />
+        <input list="liste-pays" name="pays" required />
+
+        <datalist>
+          <option value="France"></option>
+          <option value="Maroc"></option>
+          <option value="Belgique"></option>
+          <option value="Canada"></option>
+          <option value="Suisse"></option>
+        </datalist>
+      </fieldset>
+
+      <fieldset>
+        <legend>Genre</legend>
+
+        <label>
+          <input type="radio" name="genre" value="homme" required />
+          Homme
+        </label>
+
+        <label>
+          <input type="radio" name="genre" value="femme" />
+          Femme
+        </label>
+
+        <label>
+          <input type="radio" name="genre" value="autre" />
+          Autre
+        </label>
+      </fieldset>
+
+      <fieldset>
+        <legend>Centres d'intérêt</legend>
+
+        <label
+          ><input type="checkbox" name="interet" value="programmation" />
+          Programmation</label
+        ><br />
+        <label
+          ><input type="checkbox" name="interet" value="cybersecurite" />
+          Cybersécurité</label
+        ><br />
+        <label
+          ><input type="checkbox" name="interet" value="reseaux" />
+          Réseaux</label
+        ><br />
+        <label
+          ><input type="checkbox" name="interet" value="devweb" /> Développement
+          web</label
+        >
+      </fieldset>
+
+      <fieldset>
+        <legend>Biographie</legend>
+
+        <textarea
+          name="bio"
+          rows="5"
+          cols="40"
+          maxlength="200"
+          placeholder="Parlez un peu de vous (200 caractères max)"
+        ></textarea>
+      </fieldset>
+
+      <fieldset>
+        <legend>Photo de profil</legend>
+
+        <input type="file" accept="image/*" />
+      </fieldset>
+
+      <fieldset>
+        <label>
+          <input type="checkbox" required />
+          J'accepte les conditions générales d'utilisation
+        </label>
+      </fieldset>
+
+      <br />
+
+      <button type="submit">S'inscrire</button>
+    </form>
+  </body>
+</html>

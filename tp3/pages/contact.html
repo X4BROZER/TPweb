@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NovaTech – Contact</title>
+    <meta name="description" content="Contactez NovaTech pour un devis gratuit ou toute question sur nos solutions IA et data." />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="NovaTech – Contact" />
+    <meta property="og:description" content="Contactez-nous pour un devis gratuit en IA et data science." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://novatech.example.com/pages/contact.html" />
+    <meta property="og:image" content="../images/hero.jpeg" />
+
+    <link rel="stylesheet" href="../css/style.css" />
+  </head>
+  <body>
+
+    <header>
+      <a href="../index.html" class="logo">Nova<span>Tech</span></a>
+      <nav>
+        <ul>
+          <li><a href="../index.html">Accueil</a></li>
+          <li><a href="about.html">À propos</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="gallery.html">Galerie</a></li>
+          <li><a href="contact.html" class="active">Contact</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+
+      <!-- Infos de contact -->
+      <section>
+        <h2>Informations de Contact</h2>
+        <div class="contact-info">
+          <p><strong>Adresse :</strong> 45 Boulevard Anfa, Casablanca 20050, Maroc</p>
+          <p><strong>Téléphone :</strong> +212 5 22 00 11 22</p>
+          <p><strong>Email :</strong> hello@novatech.ma</p>
+          <p><strong>Horaires :</strong> Lundi – Vendredi, 9h00 – 18h00</p>
+        </div>
+      </section>
+
+      <!-- Formulaire de contact avec tous types d'inputs -->
+      <section>
+        <h2>Formulaire de Contact</h2>
+        <form action="#" method="post">
+
+          <fieldset>
+            <legend>Informations personnelles</legend>
+
+            <label for="nom">Nom :</label>
+            <input type="text" id="nom" name="nom" placeholder="Votre nom" required autocomplete="family-name" />
+
+            <label for="prenom">Prénom :</label>
+            <input type="text" id="prenom" name="prenom" placeholder="Votre prénom" required autocomplete="given-name" />
+
+            <label for="email">Email :</label>
+            <input type="email" id="email" name="email" placeholder="exemple@entreprise.com" required autocomplete="email" />
+
+            <label for="telephone">Téléphone :</label>
+            <input type="tel" id="telephone" name="telephone" placeholder="+212 5 22 00 00 00" autocomplete="tel" />
+
+            <label for="date_naissance">Date de naissance :</label>
+            <input type="date" id="date_naissance" name="date_naissance" max="2008-01-01" />
+          </fieldset>
+
+          <fieldset>
+            <legend>Votre demande</legend>
+
+            <label for="service">Solution souhaitée :</label>
+            <select id="service" name="service" required>
+              <option value="">-- Choisir une solution --</option>
+              <option value="ia-ml">IA & Machine Learning</option>
+              <option value="data-eng">Data Engineering</option>
+              <option value="cloud">Cloud & Infrastructure</option>
+              <option value="mlops">MLOps & Maintenance</option>
+              <option value="formation">Formation</option>
+            </select>
+
+            <label for="budget">Budget estimé (MAD) :</label>
+            <input type="number" id="budget" name="budget" min="0" step="1000" placeholder="ex: 10000" />
+
+            <label for="site_web">Votre site web (si existant) :</label>
+            <input type="url" id="site_web" name="site_web" placeholder="https://votre-entreprise.ma" />
+
+            <label for="delai">Délai souhaité :</label>
+            <input list="liste-delais" id="delai" name="delai" placeholder="ex: 1 mois" />
+            <datalist id="liste-delais">
+              <option value="Moins d'1 semaine"></option>
+              <option value="1 à 2 semaines"></option>
+              <option value="1 mois"></option>
+              <option value="2 à 3 mois"></option>
+              <option value="Plus de 3 mois"></option>
+            </datalist>
+          </fieldset>
+
+          <fieldset>
+            <legend>Priorité du projet</legend>
+            <label for="priorite">Niveau d'urgence : <span id="priorite-val">5</span>/10</label>
+            <input
+              type="range"
+              id="priorite"
+              name="priorite"
+              min="1"
+              max="10"
+              value="5"
+              oninput="document.getElementById('priorite-val').textContent = this.value"
+            />
+          </fieldset>
+
+          <fieldset>
+            <legend>Comment nous avez-vous connus ?</legend>
+            <label><input type="radio" name="source" value="google" required /> Google</label>
+            <label><input type="radio" name="source" value="linkedin" /> LinkedIn</label>
+            <label><input type="radio" name="source" value="bouche" /> Bouche à oreille</label>
+            <label><input type="radio" name="source" value="autre" /> Autre</label>
+          </fieldset>
+
+          <fieldset>
+            <legend>Solutions d'intérêt</legend>
+            <label><input type="checkbox" name="interet" value="ia-ml" /> IA & Machine Learning</label>
+            <label><input type="checkbox" name="interet" value="data-eng" /> Data Engineering</label>
+            <label><input type="checkbox" name="interet" value="cloud" /> Cloud & Infrastructure</label>
+            <label><input type="checkbox" name="interet" value="formation" /> Formation</label>
+          </fieldset>
+
+          <fieldset>
+            <legend>Message</legend>
+            <label for="message">Décrivez votre projet :</label>
+            <textarea id="message" name="message" rows="6" maxlength="500" placeholder="Expliquez votre besoin en quelques lignes... (500 caractères max)" required></textarea>
+
+            <label for="fichier">Joindre un document (cahier des charges, brief, etc.) :</label>
+            <input type="file" id="fichier" name="fichier" accept=".pdf,.doc,.docx,.jpg,.png" />
+          </fieldset>
+
+          <fieldset>
+            <label>
+              <input type="checkbox" name="rgpd" required />
+              J'accepte que mes données soient utilisées pour traiter ma demande (conformément au RGPD).
+            </label>
+          </fieldset>
+
+          <button type="submit">Envoyer le message</button>
+
+        </form>
+      </section>
+
+      <!-- Carte iframe -->
+      <section>
+        <h2>Notre Localisation</h2>
+        <div class="map-container">
+          <iframe
+            src="https://www.openstreetmap.org/export/embed.html?bbox=-7.6600%2C33.5500%2C-7.5500%2C33.6200&layer=mapnik"
+            title="Carte – NovaTech Casablanca"
+            allowfullscreen
+            loading="lazy"
+          ></iframe>
+        </div>
+      </section>
+
+    </main>
+
+    <footer>
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h4>Plan du site</h4>
+          <ul>
+            <li><a href="../index.html">Accueil</a></li>
+            <li><a href="about.html">À propos</a></li>
+            <li><a href="services.html">Services</a></li>
+            <li><a href="gallery.html">Galerie</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Contact</h4>
+          <p>hello@novatech.ma</p>
+          <p>+212 5 22 00 11 22</p>
+          <p>Casablanca, Maroc</p>
+        </div>
+        <div class="footer-col">
+          <h4>Mentions légales</h4>
+          <p>© 2026 NovaTech. Tous droits réservés.</p>
+          <p>RC : 123 456 789</p>
+          <p>Responsable : Rachid Lafkiar</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 NovaTech – Site réalisé dans le cadre du TP3 – ENSET Mohammedia</p>
+      </div>
+    </footer>
+
+  </body>
+</html>
