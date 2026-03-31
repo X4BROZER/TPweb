@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TP CSS — ENSET Mohammedia</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d1f0e;
+    --surface: #122314;
+    --surface2: #172b19;
+    --border: rgba(180,230,160,0.1);
+    --border-hover: rgba(180,230,160,0.22);
+    --accent: #a8e063;
+    --accent2: #d4f0a0;
+    --accent-dim: rgba(168,224,99,0.1);
+    --text: #eef5e8;
+    --text-muted: rgba(238,245,232,0.55);
+    --text-dim: rgba(238,245,232,0.28);
+    --code-bg: #091509;
+    --answer-bg: rgba(168,224,99,0.07);
+    --answer-border: rgba(168,224,99,0.28);
+    --correct: #a8e063;
+    --wrong: #ff6b6b;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'EB Garamond', Georgia, serif;
+    font-size: 17px;
+    line-height: 1.8;
+    min-height: 100vh;
+  }
+
+  /* ---- NOISE TEXTURE ---- */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.5;
+  }
+
+  /* ---- HERO ---- */
+  .hero {
+    position: relative;
+    border-bottom: 1px solid var(--border);
+    padding: 5rem 2rem 4rem;
+    text-align: center;
+    overflow: hidden;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    top: -80px; left: 50%; transform: translateX(-50%);
+    width: 600px; height: 300px;
+    background: radial-gradient(ellipse, rgba(168,224,99,0.13) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    color: var(--text);
+    margin-bottom: 1rem;
+  }
+  .hero h1 span { color: var(--accent); }
+  .hero-sub {
+    font-size: 1rem;
+    color: var(--text-muted);
+    max-width: 500px;
+    margin: 0 auto 2.5rem;
+  }
+  .hero-meta {
+    display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap;
+  }
+  .hero-meta-item {
+    display: flex; align-items: center; gap: 8px;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+  .hero-meta-item .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--accent);
+  }
+
+  /* ---- NAV ---- */
+  .side-nav {
+    position: sticky; top: 2rem;
+    display: flex; flex-direction: column; gap: 4px;
+    padding: 1.5rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    height: fit-content;
+  }
+  .side-nav a {
+    display: flex; align-items: center; gap: 10px;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--text-muted);
+    text-decoration: none;
+    padding: 7px 10px;
+    border-radius: 6px;
+    transition: all 0.15s;
+  }
+  .side-nav a:hover { background: var(--accent-dim); color: var(--accent); }
+  .side-nav a.active { background: var(--accent-dim); color: var(--accent); }
+  .side-nav .nav-num {
+    font-size: 10px; color: var(--text-dim);
+    min-width: 16px;
+  }
+
+  /* ---- LAYOUT ---- */
+  .layout {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 3rem;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 3rem 2rem 6rem;
+    position: relative; z-index: 1;
+  }
+
+  /* ---- SECTION ---- */
+  .section {
+    margin-bottom: 4rem;
+    scroll-margin-top: 2rem;
+  }
+  .section-header {
+    display: flex; align-items: baseline; gap: 1rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+  }
+  .section-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.02em;
+  }
+  .section-duration {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--text-dim);
+    margin-left: auto;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2px 8px;
+  }
+
+  /* ---- QUESTION BLOCK ---- */
+  .q-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .q-block:hover { border-color: var(--border-hover); }
+  .q-header {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 18px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .q-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    min-width: 24px;
+  }
+  .q-text {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text);
+    flex: 1;
+  }
+  .q-toggle {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; color: var(--text-dim);
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+  .q-block.open .q-toggle {
+    background: var(--accent-dim);
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: rotate(45deg);
+  }
+  .q-answer {
+    display: none;
+    padding: 0 18px 18px;
+  }
+  .q-block.open .q-answer { display: block; }
+  .answer-inner {
+    background: var(--answer-bg);
+    border: 1px solid var(--answer-border);
+    border-radius: 8px;
+    padding: 16px;
+    font-size: 0.9rem;
+    color: var(--text);
+    line-height: 1.7;
+  }
+
+  /* ---- CODE ---- */
+  pre, code {
+    font-family: 'DM Mono', monospace;
+  }
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    font-size: 0.8rem;
+    color: #c9f0de;
+    overflow-x: auto;
+    margin: 10px 0 4px;
+    line-height: 1.65;
+  }
+  .keyword { color: #ff79c6; }
+  .prop { color: #8be9fd; }
+  .val { color: #f1fa8c; }
+  .comment { color: rgba(255,255,255,0.3); font-style: italic; }
+  .sel { color: #bd93f9; }
+  code {
+    background: rgba(0,229,160,0.1);
+    color: var(--accent);
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 0.82em;
+  }
+
+  /* ---- SPECIFICITY VIZ ---- */
+  .spec-table {
+    width: 100%; border-collapse: collapse; margin-top: 10px;
+  }
+  .spec-table td {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .spec-table tr:last-child td { border-bottom: none; }
+  .spec-selector { font-family: 'DM Mono', monospace; color: var(--accent2); }
+  .spec-score { font-family: 'DM Mono', monospace; font-weight: 500; }
+  .spec-bar { height: 4px; background: var(--accent); border-radius: 2px; transition: width 0.3s; }
+  .spec-label { font-size: 11px; color: var(--text-dim); }
+
+  /* ---- BOX MODEL VIZ ---- */
+  .box-viz {
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px; margin: 12px 0;
+  }
+  .bv-margin { background: rgba(255,180,50,0.1); border: 2px dashed rgba(255,180,50,0.4); padding: 15px; border-radius: 4px; }
+  .bv-border { background: rgba(100,150,255,0.1); border: 2px solid rgba(100,150,255,0.5); padding: 12px; }
+  .bv-padding { background: rgba(0,229,160,0.08); border: 2px dashed rgba(0,229,160,0.3); padding: 14px; }
+  .bv-content { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); padding: 12px 20px; font-family: 'DM Mono', monospace; font-size: 12px; color: var(--text-muted); text-align: center; }
+  .bv-label { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-dim); text-align: center; margin-top: 4px; }
+
+  /* ---- QUIZ ---- */
+  .quiz-q {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px;
+    margin-bottom: 1rem;
+  }
+  .quiz-q-text {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 14px;
+  }
+  .quiz-opt {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    margin: 6px 0;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--text-muted);
+    transition: all 0.15s;
+    user-select: none;
+  }
+  .quiz-opt:hover { border-color: var(--border-hover); color: var(--text); background: var(--surface2); }
+  .quiz-opt.correct { border-color: var(--correct); background: rgba(0,229,160,0.08); color: var(--correct); }
+  .quiz-opt.wrong { border-color: var(--wrong); background: rgba(255,95,95,0.08); color: var(--wrong); }
+  .quiz-letter { font-family: 'DM Mono', monospace; font-size: 11px; min-width: 18px; color: var(--text-dim); }
+  .quiz-feedback {
+    font-size: 13px; padding: 10px 14px; border-radius: 6px; margin-top: 8px;
+    border-left: 3px solid var(--correct);
+    background: rgba(0,229,160,0.06);
+    color: var(--text-muted);
+    display: none;
+  }
+  .quiz-answer-row {
+    display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0;
+  }
+  .quiz-correct-opt {
+    padding: 8px 14px;
+    border: 1px solid var(--correct);
+    border-radius: 7px;
+    font-size: 14px;
+    color: var(--correct);
+    background: rgba(168,224,99,0.08);
+    font-family: 'DM Mono', monospace;
+  }
+  .quiz-wrong-opt {
+    padding: 8px 14px;
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    font-size: 14px;
+    color: var(--text-dim);
+    font-family: 'DM Mono', monospace;
+  }
+    text-align: center; padding: 2rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-top: 1rem;
+  }
+  .score-num {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 4rem;
+    font-weight: 800;
+    color: var(--accent);
+  }
+  .score-label { color: var(--text-muted); font-size: 14px; margin-top: 4px; }
+  .btn-score {
+    display: inline-block; margin-top: 1.5rem;
+    padding: 10px 24px;
+    background: var(--accent-dim);
+    border: 1px solid var(--accent);
+    border-radius: 6px;
+    color: var(--accent);
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn-score:hover { background: rgba(0,229,160,0.2); }
+
+  /* ---- NOTE CARD ---- */
+  .note-card {
+    background: rgba(0,255,255,0.04);
+    border: 1px solid rgba(0,255,255,0.15);
+    border-radius: 8px;
+    padding: 14px 16px;
+    font-size: 13px;
+    color: var(--text-muted);
+    margin: 10px 0;
+  }
+  .note-card strong { color: var(--accent2); font-family: 'DM Mono', monospace; font-weight: 500; }
+
+  /* ---- FOOTER ---- */
+  .footer {
+    text-align: center;
+    border-top: 1px solid var(--border);
+    padding: 2rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+  .footer span { color: var(--accent); }
+
+  /* ---- ANIMATIONS ---- */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .section { animation: fadeUp 0.5s ease both; }
+  .section:nth-child(1) { animation-delay: 0.05s; }
+  .section:nth-child(2) { animation-delay: 0.1s; }
+  .section:nth-child(3) { animation-delay: 0.15s; }
+  .section:nth-child(4) { animation-delay: 0.2s; }
+  .section:nth-child(5) { animation-delay: 0.25s; }
+  .section:nth-child(6) { animation-delay: 0.3s; }
+
+  /* ---- RESPONSIVE ---- */
+  @media (max-width: 768px) {
+    .layout { grid-template-columns: 1fr; }
+    .side-nav { position: static; flex-direction: row; flex-wrap: wrap; }
+    .hero { padding: 3rem 1rem 2rem; }
+  }
+
+  /* ---- PROGRESS BAR ---- */
+  .progress-wrap {
+    position: fixed; top: 0; left: 0; right: 0; height: 3px; z-index: 100;
+  }
+  .progress-bar {
+    height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2));
+    width: 0%; transition: width 0.1s;
+  }
+
+  /* ---- FLEX VIZ ---- */
+  .flex-demo {
+    display: flex;
+    gap: 8px;
+    padding: 14px;
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin: 10px 0;
+  }
+  .flex-item {
+    background: var(--accent-dim);
+    border: 1px solid var(--answer-border);
+    border-radius: 4px;
+    padding: 8px 14px;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--accent);
+  }
+
+  /* ---- GRID VIZ ---- */
+  .grid-demo {
+    display: grid;
+    grid-template-areas: "h h" "s m" "f f";
+    grid-template-columns: 180px 1fr;
+    gap: 6px;
+    padding: 12px;
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin: 10px 0;
+  }
+  .gd-h { grid-area: h; }
+  .gd-s { grid-area: s; }
+  .gd-m { grid-area: m; }
+  .gd-f { grid-area: f; }
+  .grid-demo > div {
+    background: var(--accent-dim);
+    border: 1px solid var(--answer-border);
+    border-radius: 4px;
+    padding: 8px 12px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    text-align: center;
+  }
+
+  /* ---- SPINNER ---- */
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .spinner-demo {
+    display: flex; justify-content: center; padding: 20px;
+  }
+  .spinner {
+    width: 40px; height: 40px;
+    border: 3px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+</style>
+</head>
+<body>
+
+<div class="progress-wrap"><div class="progress-bar" id="progress"></div></div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">Module — Technologies et Développement Web</div>
+  <h1>TP <span>CSS</span><br>Corrigé Complet</h1>
+  <p class="hero-sub">Toutes les réponses aux exercices : sélecteurs, box model, flexbox, grid, responsive et animations.</p>
+  <div class="hero-meta">
+    <div class="hero-meta-item"><div class="dot"></div>ENSET Mohammedia</div>
+    <div class="hero-meta-item"><div class="dot"></div>Abdelaziz DAAIF</div>
+    <div class="hero-meta-item"><div class="dot"></div>Durée : 3h</div>
+    <div class="hero-meta-item"><div class="dot"></div>8 exercices</div>
+  </div>
+</div>
+
+<!-- LAYOUT -->
+<div class="layout">
+
+  <!-- SIDEBAR NAV -->
+  <aside>
+    <nav class="side-nav">
+      <a href="#ex1"><span class="nav-num">01</span> Sélecteurs</a>
+      <a href="#ex2"><span class="nav-num">02</span> Box Model</a>
+      <a href="#ex3"><span class="nav-num">03</span> Flexbox</a>
+      <a href="#ex4"><span class="nav-num">04</span> Grid</a>
+      <a href="#ex5"><span class="nav-num">05</span> Responsive</a>
+      <a href="#ex6"><span class="nav-num">06</span> Variables CSS</a>
+      <a href="#ex7"><span class="nav-num">07</span> Animations</a>
+      <a href="#quiz"><span class="nav-num">Q</span> Quiz</a>
+    </nav>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main>
+
+    <!-- EXERCICE 1 -->
+    <section class="section" id="ex1">
+      <div class="section-header">
+        <span class="section-num">EX 01</span>
+        <h2 class="section-title">Sélecteurs &amp; Spécificité</h2>
+        <span class="section-duration">20 min</span>
+      </div>
+
+      <div class="q-block" onclick="toggleQ(this)">
+        <div class="q-header">
+          <span class="q-num">1.1</span>
+          <span class="q-text">Tous les liens dans la navigation</span>
+          <div class="q-toggle">+</div>
+        </div>
+        <div class="q-answer">
+          <div class="answer-inner">
+            <pre><span class="sel">.main-nav a</span> <span class="comment">/* Descendant : tout &lt;a&gt; dans .main-nav */</span></pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="q-block" onclick="toggleQ(this)">
+        <div class="q-header">
+          <span class="q-num">1.2</span>
+          <span class="q-text">Uniquement le lien actif</span>
+          <div class="q-toggle">+</div>
+        </div>
+        <div class="q-answer">
+          <div class="answer-inner">
+            <pre><span class="sel">.main-nav a.active</span></pre>
+            Cible un <code>&lt;a&gt;</code> qui possède simultanément la classe <code>active</code>, à l'intérieur de <code>.main-nav</code>.
+          </div>
+        </div>
+      </div>
+
+      <div class="q-block" onclick="toggleQ(this)">
+        <div class="q-header">
+          <span class="q-num">1.3</span>
+          <span class="q-text">L'article avec la classe <code>featured</code></span>
+          <div class="q-toggle">+</div>
+        </div>
+        <div class="q-answer">
+          <div class="answer-inner">
+            <pre><span class="sel">article.post.featured</span>  <span class="comment">/* ou simplement .post.featured */</span></pre>
+            Chaîner deux classes sans espace signifie que l'élément doit avoir <em>les deux</em>.
+          </div>
+        </div>
+      </div>
+
+      <div class="q-block" onclick="toggleQ(this)">
+        <div class="q-header">
+          <span class="q-num">1.4</span>
+          <span class="q-text">Le premier paragraphe de chaque article</span>
+          <div class="q-toggle">+</div>
+        </div>
+        <div class="q-answer">
+          <div class="answer-inner">
+            <pre><span class="sel">.post p:first-of-type</span></pre>
+            <code>:first-of-type</code> cible le premier enfant de type <code>&lt;p&gt;</code> dans chaque <code>.post</code>.
+          </div>
+        </div>
+      </div>
+
+      <div class="q-block" onclick="toggleQ(this)">
+        <div class="q-header">
+          <span class="q-num">1.5</span>
+          <span class="q-text">Les éléments <code>&lt;li&gt;</code> pairs</span>
+          <div class="q-toggle">+</div>
+        </div>
+        <div class="q-answer">
+          <div class="answer-inner">
+            <pre><span class="sel">li:nth-child(even)</span>  <span class="comment">/* ou li:nth-child(2n) */</span></pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="q-block" onclick="toggleQ(this)">
+        <div class="q-header">
+          <span class="q-num">1.6</span>
+          <span class="q-text">Classement par spécificité croissante</span>
+          <div class="q-toggle">+</div>
+        </div>
+        <div class="q-answer">
+          <div class="answer-inner">
+            <table class="spec-table">
+              <tr>
+                <td class="spec-selector">p</td>
+                <td class="spec-score" style="color:#888">(0,0,1)</td>
+                <td><div class="spec-bar" style="width:20px"></div></td>
+                <td class="spec-label">1 élément</td>
+              </tr>
+              <tr>
+                <td class="spec-selector">.text</td>
+                <td class="spec-score" style="color:#aaa">(0,1,0)</td>
+                <td><div class="spec-bar" style="width:50px"></div></td>
+                <td class="spec-label">1 classe</td>
+              </tr>
+              <tr>
+                <td class="spec-selector">p.text</td>
+                <td class="spec-score" style="color:#ccc">(0,1,1)</td>
+                <td><div class="spec-bar" style="width:80px"></div></td>
+                <td class="spec-label">classe + élément</td>
+              </tr>
+              <tr>
+                <td class="spec-selector">#main</td>
+                <td class="spec-score" style="color:#e0e">(1,0,0)</td>
+                <td><div class="spec-bar" style="width:120px; background:#bd93f9"></div></td>
+                <td class="spec-label">1 ID</td>
+              </tr>
+              <tr>
+                <td class="spec-selector">#main .text p</td>
+                <td class="spec-score" style="color:var(--accent)">(1,1,1)</td>
+                <td><div class="spec-bar" style="width:160px"></div></td>
+                <td class="spec-label">ID + classe + élément</td>
+              </tr>
+            </table>
+            <div class="note-card" style="margin-top:12px">
+              <strong>Égalité de spécificité :</strong> la règle déclarée en <em>dernier</em> dans le CSS l'emporte (effet cascade).
+            </div>
+            <div class="note-card">
+              <strong>Éviter !important :</strong> il court-circuite la cascade et oblige à multiplier les <code>!important</code> pour surcharger, rendant le code très difficile à maintenir.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- EXERCICE 2 -->
+    <section class="section" id="ex2">
+      <div class="section-header">
+        <span class="section-num">EX 02</span>
+        <h2 class="section-title">Box Model</h2>
+        <span class="section-duration">25 min</span>
+      </div>
+
+      <div class="q-block" onclick="toggleQ(this)">
+        <div class="q-header">
+          <span class="q-num">2.1</span>
+          <span class="q-text">Largeur totale en <code>content-box</code></span>
+          <div class="q-toggle">+</div>
+        </div>
+        <div class="q-answer">
+          <div class="answer-inner">
+            <div class="box-viz">
+              <div class="bv-margin">
+                <div class="bv-border">
+                  <div class="bv-padding">
+                    <div class="bv-content">300px contenu</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div style="font-family:'DM Mono',monospace;font-size:13px;color:var(--text-muted);line-height:2">
+              width = 300px (contenu seulement)<br>
+              + padding gauche/droite = 20 × 2 = 40px<br>
+              + border gauche/droite = 5 × 2 = 10px<br>
+              ──────────────────────────<br>
+              <strong style="color:var(--accent)">Largeur visible totale = 350px</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="q-block" onclick="toggleQ(this)">
+        <div class="q-header">
+          <span class="q-num">2.2</span>
+          <span class="q-text">Largeur totale en <code>border-box</code></span>
+          <div class="q-toggle">+</div>
+        </div>
+        <div class="q-answer">
+          <div class="answer-inner">
+            Avec <code>border-box</code>, la propriété <code>width: 300px</code> <em>inclut</em> padding et border.
+            <pre><span class="comment">/* Largeur visible = 300px (toujours) */</span>
+<span class="comment">/* Contenu réel = 300 - 40 - 10 = 250px */</span></pre>
+            <strong style="color:var(--accent)">Largeur totale visible = 300px</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="q-block" onclick="toggleQ(this)">
+        <div class="q-header">
+          <span class="q-num">2.3</span>
+          <span class="q-text">Reset CSS universel pour <code>box-sizing</code></span>
+          <div class="q-toggle">+</div>
+        </div>
+        <div class="q-answer">
+          <div class="answer-inner">
+            <pre><span class="sel">*, *::before, *::after</span> {
+  <span class="prop">box-sizing</span>: <span class="val">border-box</span>;
+}</pre>
+            À placer en tout début de feuille de style. Garantit un comportement prévisible sur tous les éléments.
+          </div>
+        </div>
+      </div>
+
+      <div class="q-block" onclick="toggleQ(this)">
+        <div class="q-header">
+          <span class="q-num">2.4</span>
+          <span class="q-text">Centrer horizontalement &amp; verticalement</span>
+          <div class="q-toggle">+</div>
+        </div>
+        <div class="q-answer">
+          <div class="answer-inner">
+            <pre><span class="comment">/* Centrage horizontal */</span>
+<span class="sel">.box</span> {
+  <span class="prop">width</span>: <span class="val">600px</span>;
+  <span class="prop">margin</span>: <span class="val">0 auto</span>;
+}
+
+<span class="comment">/* Centrage vertical + horizontal (body) */</span>
+<span class="sel">body</span> {
+  <span class="prop">display</span>: <span class="val">flex</span>;
+  <span class="prop">justify-content</span>: <span class="val">center</span>;
+  <span class="prop">align-items</span>: <span class="val">center</span>;
+  <span class="prop">min-height</span>: <span class="val">100vh</span>;
+}</pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- EXERCICE 3 -->
+    <section class="section" id="ex3">
+      <div class="section-header">
+        <span class="section-num">EX 03</span>
+        <h2 class="section-title">Flexbox</h2>
+        <span class="section-duration">30 min</span>
+      </div>
+
+      <div class="q-block" onclick="toggleQ(this)">
+        <div class="q-header">
+          <span class="q-num">3.1</span>
+          <span class="q-text">Barre de navigation avec logo à gauche, liens à droite</span>
+          <div class="q-toggle">+</div>
+        </div>
+        <div class="q-answer">
+          <div class="answer-inner">
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 16px;background:var(--code-bg);border:1px solid var(--border);border-radius:8px;margin-bottom:12px">
+              <div style="font-family:'Playfair Display',sans-serif;font-weight:700;color:var(--accent);font-size:14px">MonSite</div>
+              <div style="display:flex;gap:16px">
+                <span style="font-size:13px;color:var(--text-muted)">Accueil</span>
+                <span style="font-size:13px;color:var(--text-muted)">Services</span>
+                <span style="font-size:13px;color:var(--accent)">Contact</span>
+              </div>
+            </div>
+            <pre><span class="sel">.navbar</span> {
+  <span class="prop">display</span>: <span class="val">flex</span>;
+  <span class="prop">justify-content</span>: <span class="val">space-between</span>; <span class="comment">/* logo ← → liens */</span>
+  <span class="prop">align-items</span>: <span class="val">center</span>;
+  <span class="prop">padding</span>: <span class="val">1rem 2rem</span>;
+}
+
+<span class="sel">.nav-links</span> {
+  <span class="prop">display</span>: <span class="val">flex</span>;
+  <span class="prop">gap</span>: <span class="val">1.5rem</span>;
+  <span class="prop">list-style</span>: <span class="val">none</span>;
+}</pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="q-block" onclick="toggleQ(this)">
+        <div class="q-header">
+          <span class="q-num">3.2</span>
+          <span class="q-text">Cartes de même hauteur avec footer toujours en bas</span>
+          <div class="q-toggle">+</div>
+        </div>
+        <div class="q-answer">
+          <div class="answer-inner">
+            <div style="display:flex;gap:8px;margin-bottom:12px">
+              <div style="flex:1;display:flex;flex-direction:column;background:var(--code-bg);border:1px solid var(--border);border-radius:6px;padding:12px">
+                <div style="font-family:'Playfair Display',sans-serif;font-size:13px;font-weight:600;color:var(--text);margin-bottom:6px">Carte 1</div>
+                <div style="font-size:11px;color:var(--text-dim);flex:1">Contenu court.</div>
+                <div style="font-size:11px;color:var(--accent);margin-top:8px;font-family:'DM Mono',monospace">En savoir plus →</div>
+              </div>
+              <div style="flex:1;display:flex;flex-direction:column;background:var(--code-bg);border:1px solid var(--border);border-radius:6px;padding:12px">
+                <div style="font-family:'Playfair Display',sans-serif;font-size:13px;font-weight:600;color:var(--text);margin-bottom:6px">Carte 2</div>
+                <div style="font-size:11px;color:var(--text-dim);flex:1">Contenu beaucoup plus long pour tester l'alignement vertical des boutons.</div>
+                <div style="font-size:11px;color:var(--accent);margin-top:8px;font-family:'DM Mono',monospace">En savoir plus →</div>
+              </div>
+              <div style="flex:1;display:flex;flex-direction:column;background:var(--code-bg);border:1px solid var(--border);border-radius:6px;padding:12px">
+                <div style="font-family:'Playfair Display',sans-serif;font-size:13px;font-weight:600;color:var(--text);margin-bottom:6px">Carte 3</div>
+                <div style="font-size:11px;color:var(--text-dim);flex:1">Contenu moyen.</div>
+                <div style="font-size:11px;color:var(--accent);margin-top:8px;font-family:'DM Mono',monospace">En savoir plus →</div>
+              </div>
+            </div>
+            <pre><span class="sel">.cards</span> { <span class="prop">display</span>: <span class="val">flex</span>; <span class="prop">gap</span>: <span class="val">1rem</span>; }
+
+<span class="sel">.card</span> {
+  <span class="prop">display</span>: <span class="val">flex</span>;
+  <span class="prop">flex-direction</span>: <span class="val">column</span>;
+  <span class="prop">flex</span>: <span class="val">1</span>;         <span class="comment">/* largeurs égales */</span>
+}
+
+<span class="sel">.card p</span> { <span class="prop">flex</span>: <span class="val">1</span>; } <span class="comment">/* pousse le bouton vers le bas */</span>
+
+<span class="sel">.card-link</span> { <span class="prop">margin-top</span>: <span class="val">auto</span>; } <span class="comment">/* ancre en bas */</span></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- EXERCICE 4 -->
+    <section class="section" id="ex4">
+      <div class="section-header">
+        <span class="section-num">EX 04</span>
+        <h2 class="section-title">CSS Grid</h2>
+        <span class="section-duration">30 min</span>
+      </div>
+
+      <div class="q-block" onclick="toggleQ(this)">
+        <div class="q-header">
+          <span class="q-num">4.1</span>
+          <span class="q-text">Grille responsive automatique avec <code>auto-fit</code></span>
+          <div class="q-toggle">+</div>
+        </div>
+        <div class="q-answer">
+          <div class="answer-inner">
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:6px;margin-bottom:12px">
+              <div style="background:var(--accent-dim);border:1px solid var(--answer-border);border-radius:4px;padding:10px;text-align:center;font-family:'DM Mono',monospace;font-size:11px;color:var(--accent)">Carte 1</div>
+              <div style="background:var(--accent-dim);border:1px solid var(--answer-border);border-radius:4px;padding:10px;text-align:center;font-family:'DM Mono',monospace;font-size:11px;color:var(--accent)">Carte 2</div>
+              <div style="background:var(--accent-dim);border:1px solid var(--answer-border);border-radius:4px;padding:10px;text-align:center;font-family:'DM Mono',monospace;font-size:11px;color:var(--accent)">Carte 3</div>
+              <div style="background:var(--accent-dim);border:1px solid var(--answer-border);border-radius:4px;padding:10px;text-align:center;font-family:'DM Mono',monospace;font-size:11px;color:var(--accent)">Carte 4</div>
+              <div style="background:var(--accent-dim);border:1px solid var(--answer-border);border-radius:4px;padding:10px;text-align:center;font-family:'DM Mono',monospace;font-size:11px;color:var(--accent)">Carte 5</div>
+              <div style="background:var(--accent-dim);border:1px solid var(--answer-border);border-radius:4px;padding:10px;text-align:center;font-family:'DM Mono',monospace;font-size:11px;color:var(--accent)">Carte 6</div>
+            </div>
+            <pre><span class="sel">.grid-cards</span> {
+  <span class="prop">display</span>: <span class="val">grid</span>;
+  <span class="prop">grid-template-columns</span>: <span class="val">repeat(auto-fit, minmax(200px, 1fr))</span>;
+  <span class="prop">gap</span>: <span class="val">1rem</span>;
+}</pre>
+            <div class="note-card"><strong>auto-fit :</strong> crée autant de colonnes que possible selon la largeur disponible. <strong>minmax(200px, 1fr)</strong> : chaque colonne fait au minimum 200px, au maximum 1 fraction de l'espace.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="q-block" onclick="toggleQ(this)">
+        <div class="q-header">
+          <span class="q-num">4.2</span>
+          <span class="q-text">Layout complet avec Grid Areas</span>
+          <div class="q-toggle">+</div>
+        </div>
+        <div class="q-answer">
+          <div class="answer-inner">
+            <div class="grid-demo">
+              <div class="gd-h">Header</div>
+              <div class="gd-s">Sidebar</div>
+              <div class="gd-m" style="min-height:50px">Main</div>
+              <div class="gd-f">Footer</div>
+            </div>
+            <pre><span class="sel">.page-layout</span> {
+  <span class="prop">display</span>: <span class="val">grid</span>;
+  <span class="prop">grid-template-areas</span>:
+    <span class="val">"header  header"</span>
+    <span class="val">"sidebar main"</span>
+    <span class="val">"footer  footer"</span>;
+  <span class="prop">grid-template-columns</span>: <span class="val">250px 1fr</span>;
+  <span class="prop">grid-template-rows</span>: <span class="val">auto 1fr auto</span>;
+  <span class="prop">min-height</span>: <span class="val">100vh</span>;
+}
+
+<span class="sel">.header</span>  { <span class="prop">grid-area</span>: <span class="val">header</span>;  }
+<span class="sel">.sidebar</span> { <span class="prop">grid-area</span>: <span class="val">sidebar</span>; }
+<span class="sel">.main</span>    { <span class="prop">grid-area</span>: <span class="val">main</span>;    }
+<span class="sel">.footer</span>  { <span class="prop">grid-area</span>: <span class="val">footer</span>;  }</pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- EXERCICE 5 -->
+    <section class="section" id="ex5">
+      <div class="section-header">
+        <span class="section-num">EX 05</span>
+        <h2 class="section-title">Responsive Design</h2>
+        <span class="section-duration">25 min</span>
+      </div>
+
+      <div class="q-block" onclick="toggleQ(this)">
+        <div class="q-header">
+          <span class="q-num">5.1</span>
+          <span class="q-text">Media queries Mobile First (tablette + desktop)</span>
+          <div class="q-toggle">+</div>
+        </div>
+        <div class="q-answer">
+          <div class="answer-inner">
+            <pre><span class="comment">/* ── Base : Mobile (< 768px) ── */</span>
+<span class="sel">.container</span> { <span class="prop">width</span>: <span class="val">100%</span>; <span class="prop">padding</span>: <span class="val">15px</span>; }
+<span class="sel">.nav-menu</span>  { <span class="prop">display</span>: <span class="val">flex</span>; <span class="prop">flex-direction</span>: <span class="val">column</span>; <span class="prop">gap</span>: <span class="val">5px</span>; }
+<span class="sel">.content</span>  { <span class="prop">display</span>: <span class="val">block</span>; }
+<span class="sel">.sidebar</span>  { <span class="prop">display</span>: <span class="val">none</span>; }
+
+<span class="comment">/* ── Tablette (≥ 768px) ── */</span>
+<span class="keyword">@media</span> (<span class="prop">min-width</span>: <span class="val">768px</span>) {
+  <span class="sel">.container</span> { <span class="prop">max-width</span>: <span class="val">720px</span>; <span class="prop">margin</span>: <span class="val">0 auto</span>; }
+  <span class="sel">.nav-menu</span>  { <span class="prop">flex-direction</span>: <span class="val">row</span>; <span class="prop">justify-content</span>: <span class="val">center</span>; }
+  <span class="sel">.sidebar</span>  { <span class="prop">display</span>: <span class="val">block</span>; }
+}
+
+<span class="comment">/* ── Desktop (≥ 1024px) ── */</span>
+<span class="keyword">@media</span> (<span class="prop">min-width</span>: <span class="val">1024px</span>) {
+  <span class="sel">.container</span> { <span class="prop">max-width</span>: <span class="val">960px</span>; }
+  <span class="sel">.content</span>   {
+    <span class="prop">display</span>: <span class="val">grid</span>;
+    <span class="prop">grid-template-columns</span>: <span class="val">1fr 300px</span>;
+    <span class="prop">gap</span>: <span class="val">2rem</span>;
+  }
+}</pre>
+            <div class="note-card"><strong>Mobile First</strong> = on écrit d'abord les styles pour petit écran, puis on enrichit avec <code>min-width</code>. C'est l'opposé de <code>max-width</code> (Desktop First).</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- EXERCICE 6 -->
+    <section class="section" id="ex6">
+      <div class="section-header">
+        <span class="section-num">EX 06</span>
+        <h2 class="section-title">Variables CSS &amp; Thèmes</h2>
+        <span class="section-duration">20 min</span>
+      </div>
+
+      <div class="q-block" onclick="toggleQ(this)">
+        <div class="q-header">
+          <span class="q-num">6.1</span>
+          <span class="q-text">Système de variables CSS — thème clair et sombre</span>
+          <div class="q-toggle">+</div>
+        </div>
+        <div class="q-answer">
+          <div class="answer-inner">
+            <pre><span class="comment">/* ── Thème clair (défaut) ── */</span>
+<span class="sel">:root</span> {
+  <span class="prop">--color-bg</span>:       <span class="val">#ffffff</span>;
+  <span class="prop">--color-surface</span>:  <span class="val">#f5f5f5</span>;
+  <span class="prop">--color-text</span>:     <span class="val">#1a1a1a</span>;
+  <span class="prop">--color-muted</span>:    <span class="val">#6b7280</span>;
+  <span class="prop">--color-accent</span>:   <span class="val">#0070f3</span>;
+  <span class="prop">--color-border</span>:   <span class="val">rgba(0,0,0,0.1)</span>;
+
+  <span class="prop">--radius-sm</span>:  <span class="val">4px</span>;
+  <span class="prop">--radius-md</span>:  <span class="val">8px</span>;
+  <span class="prop">--radius-lg</span>:  <span class="val">16px</span>;
+
+  <span class="prop">--font-sans</span>:  <span class="val">'Playfair Display', Georgia, serif</span>;
+  <span class="prop">--font-mono</span>:  <span class="val">'DM Mono', monospace</span>;
+}
+
+<span class="comment">/* ── Thème sombre ── */</span>
+<span class="sel">[data-theme="dark"]</span>,
+<span class="sel">@media (prefers-color-scheme: dark)</span> {
+  <span class="prop">--color-bg</span>:       <span class="val">#0a0a0f</span>;
+  <span class="prop">--color-surface</span>:  <span class="val">#111118</span>;
+  <span class="prop">--color-text</span>:     <span class="val">#f0ede8</span>;
+  <span class="prop">--color-muted</span>:    <span class="val">rgba(240,237,232,0.5)</span>;
+  <span class="prop">--color-accent</span>:   <span class="val">#00e5a0</span>;
+  <span class="prop">--color-border</span>:   <span class="val">rgba(255,255,255,0.07)</span>;
+}
+
+<span class="comment">/* Utilisation */</span>
+<span class="sel">body</span> {
+  <span class="prop">background</span>: <span class="val">var(--color-bg)</span>;
+  <span class="prop">color</span>:      <span class="val">var(--color-text)</span>;
+}
+
+<span class="sel">.btn-toggle-theme</span> {
+  <span class="prop">background</span>: <span class="val">var(--color-surface)</span>;
+  <span class="prop">color</span>:      <span class="val">var(--color-accent)</span>;
+  <span class="prop">border</span>:     <span class="val">1px solid var(--color-border)</span>;
+  <span class="prop">border-radius</span>: <span class="val">var(--radius-md)</span>;
+}</pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- EXERCICE 7 -->
+    <section class="section" id="ex7">
+      <div class="section-header">
+        <span class="section-num">EX 07</span>
+        <h2 class="section-title">Transitions &amp; Animations</h2>
+        <span class="section-duration">20 min</span>
+      </div>
+
+      <div class="q-block" onclick="toggleQ(this)">
+        <div class="q-header">
+          <span class="q-num">7.1</span>
+          <span class="q-text">Bouton animé avec transitions au survol</span>
+          <div class="q-toggle">+</div>
+        </div>
+        <div class="q-answer">
+          <div class="answer-inner">
+            <div style="display:flex;justify-content:center;padding:20px;background:var(--code-bg);border-radius:8px;margin-bottom:12px">
+              <button class="demo-btn" style="padding:12px 28px;background:transparent;border:2px solid var(--accent);border-radius:8px;color:var(--accent);font-family:'DM Mono',monospace;font-size:14px;cursor:pointer;transition:all 0.3s ease;letter-spacing:0.05em"
+                onmouseover="this.style.background='var(--accent)';this.style.color='#0a0a0f';this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 24px rgba(0,229,160,0.3)'"
+                onmouseout="this.style.background='transparent';this.style.color='var(--accent)';this.style.transform='translateY(0)';this.style.boxShadow='none'">
+                Survolez-moi
+              </button>
+            </div>
+            <pre><span class="sel">.btn</span> {
+  <span class="prop">padding</span>: <span class="val">12px 28px</span>;
+  <span class="prop">background</span>: <span class="val">transparent</span>;
+  <span class="prop">border</span>: <span class="val">2px solid var(--color-accent)</span>;
+  <span class="prop">border-radius</span>: <span class="val">8px</span>;
+  <span class="prop">color</span>: <span class="val">var(--color-accent)</span>;
+  <span class="prop">cursor</span>: <span class="val">pointer</span>;
+  <span class="prop">transition</span>: <span class="val">all 0.3s ease</span>;
+}
+
+<span class="sel">.btn:hover</span> {
+  <span class="prop">background</span>: <span class="val">var(--color-accent)</span>;
+  <span class="prop">color</span>: <span class="val">#fff</span>;
+  <span class="prop">transform</span>: <span class="val">translateY(-3px)</span>;
+  <span class="prop">box-shadow</span>: <span class="val">0 8px 24px rgba(0,112,243,0.3)</span>;
+}
+
+<span class="sel">.btn:active</span> {
+  <span class="prop">transform</span>: <span class="val">translateY(0)</span>;
+  <span class="prop">box-shadow</span>: <span class="val">none</span>;
+}</pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="q-block" onclick="toggleQ(this)">
+        <div class="q-header">
+          <span class="q-num">7.2</span>
+          <span class="q-text">Spinner de chargement avec <code>@keyframes</code></span>
+          <div class="q-toggle">+</div>
+        </div>
+        <div class="q-answer">
+          <div class="answer-inner">
+            <div style="display:flex;align-items:center;gap:16px;padding:20px;background:var(--code-bg);border-radius:8px;margin-bottom:12px;justify-content:center">
+              <div class="spinner"></div>
+              <div style="width:40px;height:40px;border-radius:50%;border:3px solid var(--border);border-top-color:var(--accent2);animation:spin 1.2s cubic-bezier(0.4,0,0.2,1) infinite"></div>
+              <div style="width:12px;height:12px;border-radius:50%;background:var(--accent);animation:pulse 1s ease-in-out infinite alternate"></div>
+            </div>
+            <pre><span class="comment">/* Keyframes */</span>
+<span class="keyword">@keyframes</span> <span class="sel">spin</span> {
+  <span class="val">to</span> { <span class="prop">transform</span>: <span class="val">rotate(360deg)</span>; }
+}
+
+<span class="keyword">@keyframes</span> <span class="sel">pulse</span> {
+  <span class="val">from</span> { <span class="prop">transform</span>: <span class="val">scale(1)</span>;   <span class="prop">opacity</span>: <span class="val">1</span>; }
+  <span class="val">to</span>   { <span class="prop">transform</span>: <span class="val">scale(1.4)</span>; <span class="prop">opacity</span>: <span class="val">0.5</span>; }
+}
+
+<span class="comment">/* Spinner circulaire */</span>
+<span class="sel">.spinner</span> {
+  <span class="prop">width</span>: <span class="val">40px</span>; <span class="prop">height</span>: <span class="val">40px</span>;
+  <span class="prop">border</span>: <span class="val">3px solid rgba(0,0,0,0.1)</span>;
+  <span class="prop">border-top-color</span>: <span class="val">var(--color-accent)</span>;
+  <span class="prop">border-radius</span>: <span class="val">50%</span>;
+  <span class="prop">animation</span>: <span class="val">spin 0.8s linear infinite</span>;
+}
+
+<span class="comment">/* Spinner avec easing */</span>
+<span class="sel">.spinner-smooth</span> {
+  <span class="prop">animation</span>: <span class="val">spin 1.2s cubic-bezier(0.4,0,0.2,1) infinite</span>;
+}</pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- QUIZ -->
+    <section class="section" id="quiz">
+      <div class="section-header">
+        <span class="section-num">QUIZ</span>
+        <h2 class="section-title">Révision — Réponses</h2>
+      </div>
+
+      <div class="quiz-q">
+        <div class="quiz-q-text">1. Quel sélecteur a la spécificité la plus haute ?</div>
+        <div class="quiz-answer-row">
+          <span class="quiz-wrong-opt">.header .nav a</span>
+          <span class="quiz-correct-opt">#header a ✓</span>
+          <span class="quiz-wrong-opt">header nav a</span>
+          <span class="quiz-wrong-opt">a.active</span>
+        </div>
+        <div class="quiz-feedback" style="display:block">#header a — un ID compte pour (1,0,0), bien au-dessus des classes (0,1,0) et éléments (0,0,1).</div>
+      </div>
+
+      <div class="quiz-q">
+        <div class="quiz-q-text">2. Avec box-sizing: border-box, un élément width: 200px et padding: 20px a une largeur totale de :</div>
+        <div class="quiz-answer-row">
+          <span class="quiz-wrong-opt">240px</span>
+          <span class="quiz-correct-opt">200px ✓</span>
+          <span class="quiz-wrong-opt">220px</span>
+          <span class="quiz-wrong-opt">160px</span>
+        </div>
+        <div class="quiz-feedback" style="display:block">border-box inclut padding et border dans les 200px déclarés. La largeur totale reste donc 200px.</div>
+      </div>
+
+      <div class="quiz-q">
+        <div class="quiz-q-text">3. Pour centrer un élément verticalement ET horizontalement avec Flexbox :</div>
+        <div class="quiz-answer-row">
+          <span class="quiz-wrong-opt">justify-content: center</span>
+          <span class="quiz-wrong-opt">align-items: center</span>
+          <span class="quiz-correct-opt">justify-content: center ET align-items: center ✓</span>
+          <span class="quiz-wrong-opt">text-align: center</span>
+        </div>
+        <div class="quiz-feedback" style="display:block">Les deux propriétés sont nécessaires : justify-content pour l'axe principal (horizontal), align-items pour l'axe transversal.</div>
+      </div>
+
+      <div class="quiz-q">
+        <div class="quiz-q-text">4. La valeur 1fr en CSS Grid signifie :</div>
+        <div class="quiz-answer-row">
+          <span class="quiz-wrong-opt">1 pixel</span>
+          <span class="quiz-correct-opt">1 fraction de l'espace disponible ✓</span>
+          <span class="quiz-wrong-opt">1 pourcentage</span>
+          <span class="quiz-wrong-opt">1 rem</span>
+        </div>
+        <div class="quiz-feedback" style="display:block">fr = fraction unit. 1fr prend une fraction proportionnelle de l'espace libre restant dans le conteneur grid.</div>
+      </div>
+
+      <div class="quiz-q">
+        <div class="quiz-q-text">5. L'approche "Mobile First" utilise :</div>
+        <div class="quiz-answer-row">
+          <span class="quiz-wrong-opt">max-width dans les media queries</span>
+          <span class="quiz-correct-opt">min-width dans les media queries ✓</span>
+          <span class="quiz-wrong-opt">device-width</span>
+          <span class="quiz-wrong-opt">orientation</span>
+        </div>
+        <div class="quiz-feedback" style="display:block">Mobile First = on part du plus petit écran et on élargit progressivement avec min-width.</div>
+      </div>
+
+    </section>
+
+  </main>
+</div>
+
+<footer class="footer">
+  TP CSS — <span>ENSET Mohammedia</span> — Abdelaziz DAAIF — 29 janvier 2026
+</footer>
+
+<style>
+@keyframes pulse { from { transform: scale(1); opacity:1; } to { transform: scale(1.4); opacity:.5; } }
+</style>
+
+<script>
+// Progress bar
+window.addEventListener('scroll', () => {
+  const total = document.documentElement.scrollHeight - window.innerHeight;
+  const pct = Math.round((window.scrollY / total) * 100);
+  document.getElementById('progress').style.width = pct + '%';
+});
+
+// Toggle accordions
+function toggleQ(el) {
+  el.classList.toggle('open');
+}
+
+// Active nav highlight
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.side-nav a');
+window.addEventListener('scroll', () => {
+  let cur = '';
+  sections.forEach(s => {
+    if (window.scrollY >= s.offsetTop - 80) cur = s.id;
+  });
+  navLinks.forEach(a => {
+    a.classList.remove('active');
+    if (a.getAttribute('href') === '#' + cur) a.classList.add('active');
+  });
+});
+
+// Quiz — static answers, no interaction needed
+</script>
+</body>
+</html>
