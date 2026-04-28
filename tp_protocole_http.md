@@ -1,5 +1,5 @@
 # Chapitre 6 : Le Protocole HTTP — Travaux Pratiques
-> Résultats obtenus le **28 avril 2026** via `curl` depuis un environnement Linux.
+
 
 ---
 
@@ -480,4 +480,3 @@ Le flag `HttpOnly` empêche JavaScript d'accéder au cookie via `document.cookie
 
 ---
 
-*Source : [http.daaif.net/tp.html](https://http.daaif.net/tp.html) — Résultats exécutés le 28 avril 2026*
